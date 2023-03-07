@@ -1518,6 +1518,11 @@ class AnalysisIndicators(BasePandasObject):
             result = xsignals(signal=signal, xa=xa, xb=xb, above=above, long=long, asbool=asbool, trend_offset=trend_offset, trend_reset=trend_reset, offset=offset, **kwargs)
             return self._post_process(result, **kwargs)
 
+    def hurst_exponent(self, base_scale=None, max_scale=None, length=None, calculate_sma=False, sma_len=None, **kwargs):
+        close = self._get_column(kwargs.pop("close", "close"))
+        result = hurst_exponent(close=close, base_scale=base_scale, max_scale=max_scale, length=length, calculate_sma=calculate_sma, sma_len=sma_len)
+        return self._post_process(result, **kwargs)
+
     # Utility
     def above(self, asint=True, offset=None, **kwargs):
         a = self._get_column(kwargs.pop("close", "a"))
