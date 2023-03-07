@@ -3,13 +3,7 @@ import math
 
 import numpy as np
 from numpy import log10 as npLog10
-from numpy import log as npLn
-from pandas_ta.volatility import atr
 from pandas_ta.utils import get_drift, get_offset, verify_series
-
-def calc_covariance(arr1, arr2):
-    covariance = np.cov(arr1, arr2)[0][1]
-    return covariance
 
 def variance(arr):
     n = len(arr)
@@ -60,7 +54,7 @@ def hurst_exponent(close, base_scale=8, max_scale=2, length=18, calculate_sma=Fa
 
         sdx = np.std(seq) * np.sqrt(N / (N - 1))
         sdy = np.std(y) * np.sqrt(N / (N - 1))
-        cov = calc_covariance(seq, y) * (N / (N - 1))
+        cov = covariance(seq, y) * (N / (N - 1))
 
         r2 = (cov / (sdx * sdy)) ** 2
         rms = np.sqrt(1 - r2) * sdy
@@ -71,7 +65,7 @@ def hurst_exponent(close, base_scale=8, max_scale=2, length=18, calculate_sma=Fa
         num = math.floor(length / bar)
         sumr = 0.0
         for i in range(num):
-            sumr += RMS(i * bar, bar, Close)
+            sumr += RMS(i * bar, bar)
         avg = np.log10(sumr / num)
         return avg
 
@@ -88,8 +82,8 @@ def hurst_exponent(close, base_scale=8, max_scale=2, length=18, calculate_sma=Fa
     hurst_exponent.category = "trend"
 
     if calculate_sma == True:
-        slope = calc_covariance(scale, fluc) / covariance(scale)
+        slope = covariance(scale, fluc) / variance(scale)
         return ss(slope, sma_len)
     else:
-        slope = calc_covariance(scale, fluc) / covariance(scale)
+        slope = covariance(scale, fluc) / variance(scale)
         return slope
