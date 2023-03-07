@@ -78,12 +78,13 @@ def hurst_exponent(close, base_scale=8, max_scale=2, length=18, calculate_sma=Fa
     for i in range(len(scale)):
         scale[i] = npLog10(fs(i))
 
-    hurst_exponent.name = f"HURST_EXPONENT_{length}_{base_scale}_{max_scale}"
-    hurst_exponent.category = "trend"
-
     if calculate_sma == True:
         slope = covariance(scale, fluc) / variance(scale)
+        slope.name = f"HURST_EXPONENT_{length}_{base_scale}_{max_scale}"
+        slope.category = "trend"
         return ss(slope, sma_len)
     else:
         slope = covariance(scale, fluc) / variance(scale)
+        slope.name = f"HURST_EXPONENT_{length}_{base_scale}_{max_scale}"
+        slope.category = "trend"
         return slope
